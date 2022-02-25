@@ -1,23 +1,14 @@
 import React, { useContext } from 'react';
 import { PlanetsContext } from '../context/PlanetsContext';
+import Filters from './Filters';
 
 function Table() {
-  const { data, handleFilterInputByName, filterByName } = useContext(PlanetsContext);
+  const { data } = useContext(PlanetsContext);
 
   return (
     <>
       <section>
-        <label htmlFor="filter">
-          Filtre os planetas pelo nome:
-          <input
-            type="text"
-            id="filter"
-            name="filterPlanetName"
-            data-testid="name-filter"
-            value={ filterByName }
-            onChange={ handleFilterInputByName }
-          />
-        </label>
+        <Filters />
       </section>
       <table>
         <thead>

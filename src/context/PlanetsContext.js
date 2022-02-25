@@ -7,7 +7,13 @@ export const PlanetsContext = createContext();
 function PlanetsProvider({ children }) {
   const [originalData, setOriginalData] = useState([]);
   const [data, setData] = useState([]);
-  const [filter, setFilter] = useState({ filterByName: '' });
+  const [filterByName, setFilterByName] = useState('');
+  const [filterNumeric, setFilterNumeric] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
+  const [filterByNumbericValues, setFilterByNumericValues] = useState([]);
 
   async function fetchPlanets() {
     const planets = await fetchPlanetsAPI();
@@ -26,8 +32,28 @@ function PlanetsProvider({ children }) {
     }
   }
 
+  function checkConditionsToFilterByNumericValues() {
+    const { column, comparison, value } = filterNumeric;
+
+    const newData = data
+      .filter((planet) => {
+        if (comparison === 'maior que') return Number(planet[column]) > Number(value);
+        if (comparison === 'menor que') return Number(planet[column]) < Number(value);
+        if (comparison === 'igual a') return Number(planet[column]) === Number(value);
+        return null;
+      });
+    setData(newData);
+  }
+
+  function handleFilters({ target: { value, name } }) {
+    const newFilterNumeric = { ...filterNumeric };
+    newFilterNumeric[name] = value;
+    setFilterNumeric(newFilterNumeric);
+    setFilterByNumericValues([newFilterNumeric]);
+  }
+
   function handleFilterInputByName({ target }) {
-    setFilter({ ...filter, filterByName: target.value });
+    setFilterByName(target.value);
     checkConditionsToFilterByName(target.value);
   }
 
@@ -37,9 +63,15 @@ function PlanetsProvider({ children }) {
 
   const contextValue = {
     data,
-    setData,
+    filterByName,
+    column: filterNumeric.column,
+    comparison: filterNumeric.comparison,
+    value: filterNumeric.value,
+    filterByNumbericValues,
     handleFilterInputByName,
-    filterByName: filter.filterByName,
+    handleFilters,
+    handleFilterNumeric: checkConditionsToFilterByNumericValues,
+    setData,
   };
 
   return (
