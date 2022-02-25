@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { createContext, useEffect, useState } from 'react';
 import fetchPlanetsAPI from '../apiService/fetchPlanetsAPI';
 
 export const PlanetsContext = createContext();
@@ -27,30 +26,32 @@ function PlanetsProvider({ children }) {
     }
   }
 
+  function createFilters(filters) {
+    let newData;
+    filters.forEach(({ comparison, column, value }) => {
+      newData = data.filter((planet) => {
+        if (comparison === 'maior que') return Number(planet[column]) > Number(value);
+        if (comparison === 'menor que') return Number(planet[column]) < Number(value);
+        if (comparison === 'igual a') return Number(planet[column]) === Number(value);
+        return null;
+      });
+    });
+    setData(newData);
+  }
+
   function createNumericValueFilter(filter) {
-    setFilterByNumericValues((prevState) => [...prevState, filter]);
+    setFilterByNumericValues((prevState) => {
+      const newState = [...prevState, filter];
+      createFilters(newState);
+      return newState;
+    });
+    console.log(filterByNumbericValues);
   }
 
   function handleFilterInputByName({ target }) {
     setFilterByName(target.value);
     checkConditionsToFilterByName(target.value);
   }
-
-  function createFilters(comparison, column, value) {
-    const newData = data.filter((planet) => {
-      if (comparison === 'maior que') return Number(planet[column]) > Number(value);
-      if (comparison === 'menor que') return Number(planet[column]) < Number(value);
-      if (comparison === 'igual a') return Number(planet[column]) === Number(value);
-      return null;
-    });
-    setData(newData);
-  }
-
-  useEffect(() => {
-    filterByNumbericValues.forEach(({ comparison, column, value }) => {
-      createFilters(comparison, column, value);
-    });
-  }, [filterByNumbericValues]);
 
   useEffect(() => {
     fetchPlanets();
