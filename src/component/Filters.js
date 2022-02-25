@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
 
@@ -8,9 +8,14 @@ const optionsColumnFilter = ['population', 'orbital_period',
 const optionsComparisonFilter = ['maior que', 'menor que', 'igual a'];
 
 function Filters() {
-  const { handleFilterInputByName, filterByName,
-    column, comparison, value,
-    handleFilters, handleFilterNumeric } = useContext(PlanetsContext);
+  const { handleFilterInputByName,
+    filterByName, createNumericValueFilter } = useContext(PlanetsContext);
+
+  const [filterNumeric, setFilterNumeric] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
 
   return (
     <section>
@@ -28,16 +33,22 @@ function Filters() {
         dataTestid="column-filter"
         id="column"
         name="column"
-        handleChange={ handleFilters }
-        value={ column }
+        handleChange={
+          ({ target: { value } }) => setFilterNumeric((prevState) => (
+            { ...prevState, column: value }))
+        }
+        value={ filterNumeric.column }
         options={ optionsColumnFilter }
       />
       <Select
         dataTestid="comparison-filter"
         id="comparison"
         name="comparison"
-        handleChange={ handleFilters }
-        value={ comparison }
+        handleChange={
+          ({ target: { value } }) => setFilterNumeric((prevState) => (
+            { ...prevState, comparison: value }))
+        }
+        value={ filterNumeric.comparison }
         options={ optionsComparisonFilter }
       />
       <label htmlFor="value-filter">
@@ -46,14 +57,20 @@ function Filters() {
           id="value-filter"
           name="value"
           data-testid="value-filter"
-          value={ value }
-          onChange={ handleFilters }
+          onChange={
+            ({ target: { value } }) => setFilterNumeric((prevState) => (
+              { ...prevState, value }))
+          }
+          value={ filterNumeric.value }
         />
       </label>
       <button
         type="button"
         data-testid="button-filter"
-        onClick={ handleFilterNumeric }
+        onClick={ (e) => {
+          e.preventDefault();
+          createNumericValueFilter(filterNumeric);
+        } }
       >
         Filtrar
       </button>
