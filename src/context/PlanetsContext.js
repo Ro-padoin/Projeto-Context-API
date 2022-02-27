@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import React, { createContext, useEffect, useState } from 'react';
 import fetchPlanetsAPI from '../apiService/fetchPlanetsAPI';
@@ -58,6 +59,7 @@ function PlanetsProvider({ children }) {
   const contextValue = {
     data,
     filterByName,
+    filterByNumbericValues,
     createNumericValueFilter,
     handleFilterInputByName,
     setData,

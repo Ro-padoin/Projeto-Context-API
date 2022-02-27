@@ -1,21 +1,32 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
-
-const optionsColumnFilter = ['population', 'orbital_period',
-  'diameter', 'rotation_period', 'surface_water'];
 
 const optionsComparisonFilter = ['maior que', 'menor que', 'igual a'];
 
 function Filters() {
-  const { handleFilterInputByName,
-    filterByName, createNumericValueFilter } = useContext(PlanetsContext);
+  const {
+    handleFilterInputByName,
+    filterByName,
+    createNumericValueFilter,
+    filterByNumbericValues,
+  } = useContext(PlanetsContext);
 
   const [filterNumeric, setFilterNumeric] = useState({
     column: 'population',
     comparison: 'maior que',
     value: 0,
   });
+  const [optionsColumn, setOptionsColumn] = useState(
+    ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+  );
+
+  useEffect(() => {
+    const newoptions = optionsColumn.filter((option) => filterByNumbericValues
+      .every((filter) => option !== filter.column));
+    setOptionsColumn(newoptions);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterByNumbericValues]);
 
   return (
     <section>
@@ -38,7 +49,7 @@ function Filters() {
             { ...prevState, column: value }))
         }
         value={ filterNumeric.column }
-        options={ optionsColumnFilter }
+        options={ optionsColumn }
       />
       <Select
         dataTestid="comparison-filter"
@@ -74,6 +85,7 @@ function Filters() {
       >
         Filtrar
       </button>
+
     </section>
   );
 }
