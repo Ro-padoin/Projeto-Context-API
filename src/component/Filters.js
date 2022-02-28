@@ -3,6 +3,8 @@ import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
 
 const optionsComparisonFilter = ['maior que', 'menor que', 'igual a'];
+const optionsColumnFilter = ['population',
+  'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
 
 function Filters() {
   const {
@@ -19,8 +21,13 @@ function Filters() {
     comparison: 'maior que',
     value: 0,
   });
+  const [order, setOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
+  });
   const [optionsColumn, setOptionsColumn] = useState(
-    ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    // ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    optionsColumnFilter,
   );
 
   function reCreateOptionsColumn(column) {
@@ -135,6 +142,56 @@ function Filters() {
           } }
         >
           Remover todas filtragens
+        </button>
+      </div>
+      <div>
+        <Select
+          dataTestid="column-sort"
+          id="column-sort"
+          name="column-sort"
+          handleChange={
+            ({ target: { value } }) => setOrder((prevState) => (
+              { ...prevState, column: value }))
+          }
+          value={ order.column }
+          options={ optionsColumnFilter }
+        />
+
+        <label htmlFor="asc">
+          ASC
+          <input
+            type="radio"
+            id="asc"
+            data-testid="column-sort-input-asc"
+            name="sort-radio"
+            value={ order.sort }
+            onChange={
+              ({ target: { value } }) => setOrder((prevState) => (
+                { ...prevState, order: value }))
+            }
+          />
+        </label>
+        <label htmlFor="desc">
+          DESC
+          <input
+            type="radio"
+            id="desc"
+            name="sort-radio"
+            data-testid="column-sort-input-desc"
+            value={ order.sort }
+            onChange={
+              ({ target: { value } }) => setOrder((prevState) => (
+                { ...prevState, order: value }))
+            }
+          />
+        </label>
+
+        <button
+          type="submit"
+          data-testid="column-sort-button"
+          onClick={ (e) => e.preventDefault() }
+        >
+          Ordenar
         </button>
       </div>
     </section>
