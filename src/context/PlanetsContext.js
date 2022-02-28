@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import fetchPlanetsAPI from '../apiService/fetchPlanetsAPI';
 
 export const PlanetsContext = createContext();
@@ -17,7 +16,7 @@ function PlanetsProvider({ children }) {
     setOriginalData(results);
   }
 
-  function checkConditionsToFilterByName(value) {
+  function createFilterByName(value) {
     if (value.length !== 0) {
       const dataFilterName = data
         .filter((planet) => planet.name.toLowerCase().includes(value));
@@ -27,14 +26,26 @@ function PlanetsProvider({ children }) {
     }
   }
 
-  function createFilters({ comparison, column, value }) {
-    const newData = data.filter((planet) => {
-      if (comparison === 'maior que') return Number(planet[column]) > Number(value);
-      if (comparison === 'menor que') return Number(planet[column]) < Number(value);
-      if (comparison === 'igual a') return Number(planet[column]) === Number(value);
-      return null;
+  const createMultipleNumericFilters = useCallback(() => {
+    let newData = originalData;
+    filterByNumbericValues.forEach(({ comparison, column, value }) => {
+      newData = newData.filter((planet) => {
+        if (comparison === 'maior que') return Number(planet[column]) > Number(value);
+        if (comparison === 'menor que') return Number(planet[column]) < Number(value);
+        return Number(planet[column]) === Number(value);
+      });
     });
     setData(newData);
+  }, [originalData, setData, filterByNumbericValues]);
+
+  function removeFilter(column) {
+    setFilterByNumericValues((prevState) => prevState.filter((item) => item
+      .column !== column));
+  }
+
+  function removeAllFilters() {
+    setFilterByNumericValues([]);
+    setData(originalData);
   }
 
   function createNumericValueFilter(filter) {
@@ -43,13 +54,16 @@ function PlanetsProvider({ children }) {
 
   function handleFilterInputByName({ target }) {
     setFilterByName(target.value);
-    checkConditionsToFilterByName(target.value);
+    createFilterByName(target.value);
   }
 
   useEffect(() => {
-    filterByNumbericValues.forEach(({ comparison, column, value }) => {
-      createFilters({ comparison, column, value });
-    });
+    if (filterByNumbericValues.length !== 0) {
+      createMultipleNumericFilters();
+    } else {
+      setData(originalData);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterByNumbericValues]);
 
   useEffect(() => {
@@ -57,11 +71,13 @@ function PlanetsProvider({ children }) {
   }, []);
 
   const contextValue = {
+    createNumericValueFilter,
     data,
     filterByName,
     filterByNumbericValues,
-    createNumericValueFilter,
     handleFilterInputByName,
+    removeFilter,
+    removeAllFilters,
     setData,
   };
 
