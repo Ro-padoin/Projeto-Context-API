@@ -8,12 +8,15 @@ const optionsColumnFilter = ['population',
 
 function Filters() {
   const {
-    handleFilterInputByName,
-    filterByName,
     createNumericValueFilter,
+    createTableSort,
+    filterByName,
     filterByNumbericValues,
-    removeFilter,
+    handleFilterInputByName,
+    order,
     removeAllFilters,
+    removeFilter,
+    setOrder,
   } = useContext(PlanetsContext);
 
   const [filterNumeric, setFilterNumeric] = useState({
@@ -21,10 +24,7 @@ function Filters() {
     comparison: 'maior que',
     value: 0,
   });
-  const [order, setOrder] = useState({
-    column: 'population',
-    sort: 'ASC',
-  });
+
   const [optionsColumn, setOptionsColumn] = useState(
     // ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
     optionsColumnFilter,
@@ -149,47 +149,46 @@ function Filters() {
           dataTestid="column-sort"
           id="column-sort"
           name="column-sort"
+          options={ optionsColumnFilter }
           handleChange={
             ({ target: { value } }) => setOrder((prevState) => (
               { ...prevState, column: value }))
           }
           value={ order.column }
-          options={ optionsColumnFilter }
         />
 
-        <label htmlFor="asc">
+        <label htmlFor="sort-radio">
+          <input
+            type="radio"
+            id="sort-radio"
+            data-testid="column-sort-input-asc"
+            name="sortTable"
+            onChange={
+              () => setOrder((prevState) => (
+                { ...prevState, sort: 'ASC' }))
+            }
+          />
           ASC
           <input
             type="radio"
-            id="asc"
-            data-testid="column-sort-input-asc"
-            name="sort-radio"
-            value={ order.sort }
-            onChange={
-              ({ target: { value } }) => setOrder((prevState) => (
-                { ...prevState, order: value }))
-            }
-          />
-        </label>
-        <label htmlFor="desc">
-          DESC
-          <input
-            type="radio"
-            id="desc"
-            name="sort-radio"
+            id="sort-radio"
+            name="sortTable"
             data-testid="column-sort-input-desc"
-            value={ order.sort }
             onChange={
-              ({ target: { value } }) => setOrder((prevState) => (
-                { ...prevState, order: value }))
+              () => setOrder((prevState) => (
+                { ...prevState, sort: 'DESC' }))
             }
           />
+          DESC
         </label>
 
         <button
           type="submit"
           data-testid="column-sort-button"
-          onClick={ (e) => e.preventDefault() }
+          onClick={ (e) => {
+            e.preventDefault();
+            createTableSort();
+          } }
         >
           Ordenar
         </button>

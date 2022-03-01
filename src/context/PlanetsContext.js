@@ -1,17 +1,37 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import fetchPlanetsAPI from '../apiService/fetchPlanetsAPI';
 
 export const PlanetsContext = createContext();
+
+const RESULT = -1;
 function PlanetsProvider({ children }) {
   const [originalData, setOriginalData] = useState([]);
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
   const [filterByNumbericValues, setFilterByNumericValues] = useState([]);
+  const [order, setOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
+  });
 
   async function fetchPlanets() {
+    const { column } = order;
     const planets = await fetchPlanetsAPI();
     const results = planets.results.filter((item) => delete item.residents);
+    results.sort((a, b) => {
+      if (a[column] === 'unknown' && b[column] === 'unknown') {
+        return 0;
+      }
+      if (a[column] === 'unknown') {
+        return 1;
+      }
+      if (b[column] === 'unknown') {
+        return RESULT;
+      }
+      return a[column] - b[column];
+    });
     setData(results);
     setOriginalData(results);
   }
@@ -52,6 +72,17 @@ function PlanetsProvider({ children }) {
     setFilterByNumericValues((prevState) => [...prevState, filter]);
   }
 
+  function createTableSort() {
+    const { column, sort } = order;
+    let ordenateData;
+    if (sort === 'ASC') {
+      ordenateData = data.sort((a, b) => a[column] - b[column]);
+      setData(ordenateData);
+    }
+    ordenateData = data.sort((a, b) => b[column] - a[column]);
+    return ordenateData;
+  }
+
   function handleFilterInputByName({ target }) {
     setFilterByName(target.value);
     createFilterByName(target.value);
@@ -63,7 +94,6 @@ function PlanetsProvider({ children }) {
     } else {
       setData(originalData);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterByNumbericValues]);
 
   useEffect(() => {
@@ -72,13 +102,16 @@ function PlanetsProvider({ children }) {
 
   const contextValue = {
     createNumericValueFilter,
+    createTableSort,
     data,
     filterByName,
     filterByNumbericValues,
     handleFilterInputByName,
+    order,
     removeFilter,
     removeAllFilters,
     setData,
+    setOrder,
   };
 
   return (
