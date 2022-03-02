@@ -11,62 +11,25 @@ function PlanetsProvider({ children }) {
   const [data, setData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
   const [filterByNumbericValues, setFilterByNumericValues] = useState([]);
-  const [order, setOrder] = useState({
-    column: 'population',
-    sort: 'ASC',
-  });
 
-  function createTableSortAsc() {
-    const { column } = order;
-    const ordenateData = data.sort((a, b) => {
-      if (a[column] === 'unknown' && b[column] === 'unknown') {
-        return 0;
-      }
-      if (a[column] === 'unknown') {
-        return 1;
-      }
-      if (b[column] === 'unknown') {
-        return RESULT;
-      }
-      return a[column] - b[column];
-    });
-    setData(ordenateData);
-  }
-
-  function createTableSortDesc() {
-    const { column } = order;
-    const ordenateData = data.sort((a, b) => {
-      if (a[column] === 'unknown' && b[column] === 'unknown') {
-        return 0;
-      }
-      if (a[column] === 'unknown') {
-        return RESULT;
-      }
-      if (b[column] === 'unknown') {
-        return 1;
+  function createTableSort({ column, sort }) {
+    setData((prevData) => [...prevData.sort((a, b) => {
+      if (a[column] === 'unknown' && b[column] === 'unknown') return 0;
+      if (a[column] === 'unknown') return 1;
+      if (b[column] === 'unknown') return RESULT;
+      if (sort === 'ASC') {
+        return a[column] - b[column];
       }
       return b[column] - a[column];
-    });
-    setData(ordenateData);
+    })]);
   }
 
   async function fetchPlanets() {
     const planets = await fetchPlanetsAPI();
     const results = planets.results.filter((item) => delete item.residents);
-    results.sort((j, k) => {
-      if (j.population === 'unknown' && k.population === 'unknown') {
-        return 0;
-      }
-      if (j.population === 'unknown') {
-        return 1;
-      }
-      if (k.population === 'unknown') {
-        return RESULT;
-      }
-      return j.population - k.population;
-    });
-    setData(results);
-    setOriginalData(results);
+    results.sort((a, b) => a.name.localeCompare(b.name));
+    setData([...results]);
+    setOriginalData([...results]);
   }
 
   function createFilterByName(value) {
@@ -124,17 +87,14 @@ function PlanetsProvider({ children }) {
 
   const contextValue = {
     createNumericValueFilter,
-    createTableSortAsc,
-    createTableSortDesc,
+    createTableSort,
     data,
     filterByName,
     filterByNumbericValues,
     handleFilterInputByName,
-    order,
     removeFilter,
     removeAllFilters,
     setData,
-    setOrder,
   };
 
   return (

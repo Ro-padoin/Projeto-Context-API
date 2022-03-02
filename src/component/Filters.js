@@ -9,10 +9,7 @@ const optionsColumnFilter = ['population',
 function Filters() {
   const {
     createNumericValueFilter,
-    createTableSortAsc,
-    createTableSortDesc,
-    order,
-    setOrder,
+    createTableSort,
     filterByName,
     filterByNumbericValues,
     handleFilterInputByName,
@@ -29,6 +26,11 @@ function Filters() {
   const [optionsColumn, setOptionsColumn] = useState(
     optionsColumnFilter,
   );
+
+  const [order, setOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
+  });
 
   function reCreateOptionsColumn(column) {
     const verifyOptions = optionsColumn.some((item) => item.includes(column));
@@ -157,17 +159,19 @@ function Filters() {
           value={ order.column }
         />
 
-        <label htmlFor="sort-radio">
+        <label
+          htmlFor="sort-radio"
+          onChange={
+            ({ target: { value } }) => setOrder((prevState) => (
+              { ...prevState, sort: value }))
+          }
+        >
           <input
             type="radio"
             id="sort-radio"
             data-testid="column-sort-input-asc"
             name="sortTable"
             value="ASC"
-            onChange={
-              ({ target: { value } }) => setOrder((prevState) => (
-                { ...prevState, sort: value }))
-            }
           />
           ASC
           <input
@@ -176,10 +180,6 @@ function Filters() {
             name="sortTable"
             data-testid="column-sort-input-desc"
             value="DESC"
-            onChange={
-              ({ target: { value } }) => setOrder((prevState) => (
-                { ...prevState, sort: value }))
-            }
           />
           DESC
         </label>
@@ -189,12 +189,7 @@ function Filters() {
           data-testid="column-sort-button"
           onClick={ (e) => {
             e.preventDefault();
-            if (order.sort === 'ASC') {
-              createTableSortAsc();
-            }
-            if (order.sort === 'DESC') {
-              createTableSortDesc();
-            }
+            createTableSort(order);
           } }
         >
           Ordenar
