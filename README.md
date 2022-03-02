@@ -1,5 +1,5 @@
 # Boas vindas ao repositório do projeto Context API!
-Projeto desenvolvido no bloco 17 do Módulo 2 - FrontEnd.
+Projeto desenvolvido no Modulo de Frontend - bloco 17.
 Curso de Desenvolvimento WEB - Trybe - Turma 17.
 
 
