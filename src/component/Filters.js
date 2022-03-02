@@ -9,14 +9,15 @@ const optionsColumnFilter = ['population',
 function Filters() {
   const {
     createNumericValueFilter,
-    createTableSort,
+    createTableSortAsc,
+    createTableSortDesc,
+    order,
+    setOrder,
     filterByName,
     filterByNumbericValues,
     handleFilterInputByName,
-    order,
     removeAllFilters,
     removeFilter,
-    setOrder,
   } = useContext(PlanetsContext);
 
   const [filterNumeric, setFilterNumeric] = useState({
@@ -26,7 +27,6 @@ function Filters() {
   });
 
   const [optionsColumn, setOptionsColumn] = useState(
-    // ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
     optionsColumnFilter,
   );
 
@@ -163,9 +163,10 @@ function Filters() {
             id="sort-radio"
             data-testid="column-sort-input-asc"
             name="sortTable"
+            value="ASC"
             onChange={
-              () => setOrder((prevState) => (
-                { ...prevState, sort: 'ASC' }))
+              ({ target: { value } }) => setOrder((prevState) => (
+                { ...prevState, sort: value }))
             }
           />
           ASC
@@ -174,20 +175,26 @@ function Filters() {
             id="sort-radio"
             name="sortTable"
             data-testid="column-sort-input-desc"
+            value="DESC"
             onChange={
-              () => setOrder((prevState) => (
-                { ...prevState, sort: 'DESC' }))
+              ({ target: { value } }) => setOrder((prevState) => (
+                { ...prevState, sort: value }))
             }
           />
           DESC
         </label>
 
         <button
-          type="submit"
+          type="button"
           data-testid="column-sort-button"
           onClick={ (e) => {
             e.preventDefault();
-            createTableSort();
+            if (order.sort === 'ASC') {
+              createTableSortAsc();
+            }
+            if (order.sort === 'DESC') {
+              createTableSortDesc();
+            }
           } }
         >
           Ordenar
