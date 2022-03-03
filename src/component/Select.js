@@ -6,6 +6,7 @@ function Select(props) {
 
   return (
     <select
+      className="filter-numeric"
       data-testid={ dataTestid }
       id={ id }
       name={ name }

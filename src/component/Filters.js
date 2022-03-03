@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import '../style/filters.css';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
 
@@ -47,92 +48,96 @@ function Filters() {
   }, [filterByNumbericValues]);
 
   return (
-    <section>
-      <label htmlFor="filter">
-        Filtre os planetas pelo nome:
-        <input
-          type="text"
-          id="filter"
-          data-testid="name-filter"
-          value={ filterByName }
-          onChange={ handleFilterInputByName }
-        />
-      </label>
-      <Select
-        dataTestid="column-filter"
-        id="column"
-        name="column"
-        handleChange={
-          ({ target: { value } }) => setFilterNumeric((prevState) => (
-            { ...prevState, column: value }))
-        }
-        value={ filterNumeric.column }
-        options={ optionsColumn }
-      />
-      <Select
-        dataTestid="comparison-filter"
-        id="comparison"
-        name="comparison"
-        handleChange={
-          ({ target: { value } }) => setFilterNumeric((prevState) => (
-            { ...prevState, comparison: value }))
-        }
-        value={ filterNumeric.comparison }
-        options={ optionsComparisonFilter }
-      />
-      <label htmlFor="value-filter">
-        <input
-          type="number"
-          id="value-filter"
-          name="value"
-          data-testid="value-filter"
-          onChange={
-            ({ target: { value } }) => setFilterNumeric((prevState) => (
-              { ...prevState, value }))
-          }
-          value={ filterNumeric.value }
-        />
-      </label>
-      <button
-        type="submit"
-        data-testid="button-filter"
-        onClick={ (e) => {
-          e.preventDefault();
-          createNumericValueFilter(filterNumeric);
-        } }
-      >
-        Filtrar
-      </button>
+    <form>
+      <section className="box-filters-name-e-numeric">
+        <div>
+          <label htmlFor="filter">
+            <span className="span-filter">Filtre os planetas pelo nome: </span>
+            <input
+              id="filter"
+              onChange={ handleFilterInputByName }
+              size="40"
+              type="text"
+              value={ filterByName }
+            />
+          </label>
+        </div>
+        <div className="box-filter-numeric">
+          <span className="span-filter">Filtre os planetas por modalidades: </span>
+          <Select
+            dataTestid="column-filter"
+            id="column"
+            name="column"
+            handleChange={
+              ({ target: { value } }) => setFilterNumeric((prevState) => (
+                { ...prevState, column: value }))
+            }
+            value={ filterNumeric.column }
+            options={ optionsColumn }
+          />
+          <Select
+            dataTestid="comparison-filter"
+            id="comparison"
+            name="comparison"
+            handleChange={
+              ({ target: { value } }) => setFilterNumeric((prevState) => (
+                { ...prevState, comparison: value }))
+            }
+            value={ filterNumeric.comparison }
+            options={ optionsComparisonFilter }
+          />
+          <label htmlFor="value-filter">
+            <input
+              className="filter-numeric"
+              data-testid="value-filter"
+              id="value-filter"
+              name="value"
+              onChange={
+                ({ target: { value } }) => setFilterNumeric((prevState) => (
+                  { ...prevState, value }))
+              }
+              length="20"
+              type="number"
+              value={ filterNumeric.value }
+            />
+          </label>
+          <button
+            type="submit"
+            data-testid="button-filter"
+            onClick={ (e) => {
+              e.preventDefault();
+              createNumericValueFilter(filterNumeric);
+            } }
+          >
+            Filtrar
+          </button>
+        </div>
+      </section>
 
       <div>
         {filterByNumbericValues.length !== 0
-        && filterByNumbericValues.map(({ column, comparison, value }, i) => {
-          let comparisonLabel = '>';
-          if (comparison === 'menor que') comparisonLabel = '<';
-          if (comparison === 'igual a') comparisonLabel = '===';
-          return (
-            <div key={ `${column} + ${i}` } data-testid="filter">
-              <p>
-                {column}
-                {' '}
-                {comparisonLabel}
-                {' '}
-                {value}
-              </p>
-              <button
-                type="submit"
-                onClick={ (e) => {
-                  e.preventDefault();
-                  reCreateOptionsColumn(column);
-                  removeFilter(column);
-                } }
-              >
-                X
+        && filterByNumbericValues.map(({ column, comparison, value }, i) => (
+          <div key={ `${column} + ${i}` } data-testid="filter">
+            <p>
+              {column}
+              {' '}
+              {comparison}
+              {' '}
+              {value}
+            </p>
+            <button
+              type="submit"
+              onClick={ (e) => {
+                e.preventDefault();
+                reCreateOptionsColumn(column);
+                removeFilter(column);
+              } }
+            >
+              X
 
-              </button>
-            </div>
-          );
-        })}
+            </button>
+          </div>
+        ))}
       </div>
       <div>
         <button
@@ -195,7 +200,7 @@ function Filters() {
           Ordenar
         </button>
       </div>
-    </section>
+    </form>
   );
 }
 

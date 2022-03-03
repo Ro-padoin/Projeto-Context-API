@@ -1,0 +1,15 @@
+.box-filters-name-e-numeric {
+  display: flex;
+  justify-content:space-between;
+  margin-right: 10px;
+  border: 3px solid red;
+}
+
+.span-filter {
+  margin-right: 5px;
+}
+
+.filter-numeric {
+  margin-right: 5px;
+  width: 120px
+}
