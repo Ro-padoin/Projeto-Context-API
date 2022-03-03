@@ -1,9 +1,14 @@
 import React, { useContext } from 'react';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Filters from './Filters';
+import Th from './Th';
 
 function Table() {
   const { data } = useContext(PlanetsContext);
+
+  const titles = ['Nome', 'Rotation Period', 'Orbital Period', 'Diameter',
+    'Climate', 'Gravity', 'Terrain', 'Surface Water', 'Population',
+    'Films', 'Created', 'Edited', 'URL'];
 
   return (
     <>
@@ -13,19 +18,9 @@ function Table() {
       <table>
         <thead>
           <tr>
-            <th>Nome</th>
-            <th>Rotation Period</th>
-            <th>Orbital Period</th>
-            <th>Diameter</th>
-            <th>Climate</th>
-            <th>Gravity</th>
-            <th>Terrain</th>
-            <th>Surface Water</th>
-            <th>Population</th>
-            <th>Films</th>
-            <th>Created</th>
-            <th>Edited</th>
-            <th>URL</th>
+            { titles.map((title, i) => (
+              <Th key={ i }>{title}</Th>
+            ))}
           </tr>
         </thead>
         <tbody>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 function Select(props) {
   const { dataTestid, value, name, id, options, handleChange } = props;
+
   return (
     <select
       data-testid={ dataTestid }

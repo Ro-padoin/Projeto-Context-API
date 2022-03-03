@@ -12,26 +12,6 @@ function PlanetsProvider({ children }) {
   const [filterByName, setFilterByName] = useState('');
   const [filterByNumbericValues, setFilterByNumericValues] = useState([]);
 
-  function createTableSort({ column, sort }) {
-    setData((prevData) => [...prevData.sort((a, b) => {
-      if (a[column] === 'unknown' && b[column] === 'unknown') return 0;
-      if (a[column] === 'unknown') return 1;
-      if (b[column] === 'unknown') return RESULT;
-      if (sort === 'ASC') {
-        return a[column] - b[column];
-      }
-      return b[column] - a[column];
-    })]);
-  }
-
-  async function fetchPlanets() {
-    const planets = await fetchPlanetsAPI();
-    const results = planets.results.filter((item) => delete item.residents);
-    results.sort((a, b) => a.name.localeCompare(b.name));
-    setData([...results]);
-    setOriginalData([...results]);
-  }
-
   function createFilterByName(value) {
     if (value.length !== 0) {
       const dataFilterName = data
@@ -54,9 +34,33 @@ function PlanetsProvider({ children }) {
     setData(newData);
   }, [originalData, setData, filterByNumbericValues]);
 
-  function removeFilter(column) {
-    setFilterByNumericValues((prevState) => prevState.filter((item) => item
-      .column !== column));
+  function createNumericValueFilter(filter) {
+    setFilterByNumericValues((prevState) => [...prevState, filter]);
+  }
+
+  function createTableSort({ column, sort }) {
+    setData((prevData) => [...prevData.sort((a, b) => {
+      if (a[column] === 'unknown' && b[column] === 'unknown') return 0;
+      if (a[column] === 'unknown') return 1;
+      if (b[column] === 'unknown') return RESULT;
+      if (sort === 'ASC') {
+        return a[column] - b[column];
+      }
+      return b[column] - a[column];
+    })]);
+  }
+
+  async function fetchPlanets() {
+    const planets = await fetchPlanetsAPI();
+    const results = planets.results.filter((item) => delete item.residents);
+    results.sort((a, b) => a.name.localeCompare(b.name));
+    setData([...results]);
+    setOriginalData([...results]);
+  }
+
+  function handleFilterInputByName({ target }) {
+    setFilterByName(target.value);
+    createFilterByName(target.value);
   }
 
   function removeAllFilters() {
@@ -64,13 +68,9 @@ function PlanetsProvider({ children }) {
     setData(originalData);
   }
 
-  function createNumericValueFilter(filter) {
-    setFilterByNumericValues((prevState) => [...prevState, filter]);
-  }
-
-  function handleFilterInputByName({ target }) {
-    setFilterByName(target.value);
-    createFilterByName(target.value);
+  function removeFilter(column) {
+    setFilterByNumericValues((prevState) => prevState.filter((item) => item
+      .column !== column));
   }
 
   useEffect(() => {
