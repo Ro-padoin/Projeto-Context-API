@@ -96,18 +96,19 @@ function Filters() {
                 ({ target: { value } }) => setFilterNumeric((prevState) => (
                   { ...prevState, value }))
               }
-              length="20"
+              size=""
               type="number"
               value={ filterNumeric.value }
             />
           </label>
           <button
-            type="submit"
+            className="button"
             data-testid="button-filter"
             onClick={ (e) => {
               e.preventDefault();
               createNumericValueFilter(filterNumeric);
             } }
+            type="submit"
           >
             Filtrar
           </button>
