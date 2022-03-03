@@ -52,18 +52,19 @@ function Filters() {
       <section className="box-filters-name-e-numeric">
         <div>
           <label htmlFor="filter">
-            <span className="span-filter">Filtre os planetas pelo nome: </span>
+            <span className="span-filter">Filtro por nome: </span>
             <input
+              className="filter-name"
               id="filter"
               onChange={ handleFilterInputByName }
+              value={ filterByName }
               size="40"
               type="text"
-              value={ filterByName }
             />
           </label>
         </div>
         <div className="box-filter-numeric">
-          <span className="span-filter">Filtre os planetas por modalidades: </span>
+          <span className="span-filter">Filtro por modalidade: </span>
           <Select
             dataTestid="column-filter"
             id="column"
@@ -115,41 +116,52 @@ function Filters() {
         </div>
       </section>
 
-      <div>
+      <section className="box-individual-filter">
         {filterByNumbericValues.length !== 0
         && filterByNumbericValues.map(({ column, comparison, value }, i) => (
-          <div key={ `${column} + ${i}` } data-testid="filter">
-            <p>
-              {column}
-              {' '}
-              {comparison}
-              {' '}
-              {value}
-            </p>
-            <button
-              type="submit"
-              onClick={ (e) => {
-                e.preventDefault();
-                reCreateOptionsColumn(column);
-                removeFilter(column);
-              } }
-            >
-              X
 
-            </button>
-          </div>
+          <>
+            <div
+              className="individual-filter"
+              data-testid="name-filter"
+              key={ `${column} + ${i}` }
+            >
+              <p>
+                {column}
+                {' '}
+                {comparison}
+                {' '}
+                {value}
+              </p>
+            </div>
+            <div>
+              <button
+                className="button-delete"
+                onClick={ (e) => {
+                  e.preventDefault();
+                  reCreateOptionsColumn(column);
+                  removeFilter(column);
+                } }
+                type="submit"
+              >
+                X
+              </button>
+            </div>
+
+          </>
         ))}
-      </div>
-      <div>
+      </section>
+      <div className="box-individual-filter">
         <button
-          type="submit"
+          className="button"
           data-testid="button-remove-filters"
           onClick={ (e) => {
             e.preventDefault();
             removeAllFilters();
           } }
+          type="submit"
         >
-          Remover todas filtragens
+          Limpar filtros
         </button>
       </div>
       <div>
@@ -173,30 +185,33 @@ function Filters() {
           }
         >
           <input
-            type="radio"
-            id="sort-radio"
+            className="radio-button"
             data-testid="column-sort-input-asc"
+            id="sort-radio"
             name="sortTable"
+            type="radio"
             value="ASC"
           />
-          ASC
+          <span className="span-filter">ASC</span>
           <input
-            type="radio"
+            className="radio-button"
+            data-testid="column-sort-input-desc"
             id="sort-radio"
             name="sortTable"
-            data-testid="column-sort-input-desc"
+            type="radio"
             value="DESC"
           />
-          DESC
+          <span className="span-filter">DESC</span>
         </label>
 
         <button
-          type="button"
+          className="button"
           data-testid="column-sort-button"
           onClick={ (e) => {
             e.preventDefault();
             createTableSort(order);
           } }
+          type="button"
         >
           Ordenar
         </button>

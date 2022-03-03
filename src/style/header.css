@@ -11,9 +11,10 @@ body {
 
 .box-header {
   background-color: #161A1D;
+  border: 2px solid #B1A7A6;
   color: #B1A7A6;
   height: 80px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   padding: 10px;
 }
 

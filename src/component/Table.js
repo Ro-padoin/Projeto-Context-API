@@ -12,7 +12,7 @@ function Table() {
 
   return (
     <>
-      <section>
+      <section className="box-filters">
         <Filters />
       </section>
       <table>
