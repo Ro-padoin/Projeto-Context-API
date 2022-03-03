@@ -1,0 +1,61 @@
+.box-filters-name-e-numeric {
+  display: flex;
+  justify-content:space-between;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.box-individual-filter {
+  display: flex;
+  margin-bottom: 20px;
+  margin-left: 5px ;
+  }
+
+.button {
+  background-color: #161A1D;
+  border-radius: 3px;
+  box-shadow: 7px 5px 5px #B1A7A6;
+  color: #F5F3F4;
+  font-weight: bolder;
+  margin-left: 5px;
+  width: 120px;
+}
+
+.button-delete {
+  background-color: #161A1D;
+  border-radius: 3px;
+  box-shadow: 5px 2px 2px #B1A7A6;
+  color: #F5F3F4;
+  font-weight: bolder;
+  margin-left: 5px;
+  margin-right: 10px;
+  width: 30px;
+}
+
+.filter-name {
+  border: 2px solid #B1A7A6;
+  border-radius: 3px;
+}
+
+.filter-numeric {
+  border: 2px solid #B1A7A6;
+  border-radius: 3px;
+  margin-left: 5px;
+  margin-right: 8px;
+  width: 120px
+}
+
+.name-filter {
+  padding: 10px;
+}
+
+.radio-button {
+  margin-right: 5px;
+}
+
+.span-filter {
+  font-weight: bolder;
+  margin-right: 5px;
+}
+

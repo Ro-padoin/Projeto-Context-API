@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import '../style/filters.css';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
 
@@ -47,103 +48,120 @@ function Filters() {
   }, [filterByNumbericValues]);
 
   return (
-    <section>
-      <label htmlFor="filter">
-        Filtre os planetas pelo nome:
-        <input
-          type="text"
-          id="filter"
-          data-testid="name-filter"
-          value={ filterByName }
-          onChange={ handleFilterInputByName }
-        />
-      </label>
-      <Select
-        dataTestid="column-filter"
-        id="column"
-        name="column"
-        handleChange={
-          ({ target: { value } }) => setFilterNumeric((prevState) => (
-            { ...prevState, column: value }))
-        }
-        value={ filterNumeric.column }
-        options={ optionsColumn }
-      />
-      <Select
-        dataTestid="comparison-filter"
-        id="comparison"
-        name="comparison"
-        handleChange={
-          ({ target: { value } }) => setFilterNumeric((prevState) => (
-            { ...prevState, comparison: value }))
-        }
-        value={ filterNumeric.comparison }
-        options={ optionsComparisonFilter }
-      />
-      <label htmlFor="value-filter">
-        <input
-          type="number"
-          id="value-filter"
-          name="value"
-          data-testid="value-filter"
-          onChange={
-            ({ target: { value } }) => setFilterNumeric((prevState) => (
-              { ...prevState, value }))
-          }
-          value={ filterNumeric.value }
-        />
-      </label>
-      <button
-        type="submit"
-        data-testid="button-filter"
-        onClick={ (e) => {
-          e.preventDefault();
-          createNumericValueFilter(filterNumeric);
-        } }
-      >
-        Filtrar
-      </button>
+    <form>
+      <section className="box-filters-name-e-numeric">
+        <div>
+          <label htmlFor="filter">
+            <span className="span-filter">Filtro por nome: </span>
+            <input
+              className="filter-name"
+              id="filter"
+              onChange={ handleFilterInputByName }
+              value={ filterByName }
+              size="40"
+              type="text"
+            />
+          </label>
+        </div>
+        <div className="box-filter-numeric">
+          <span className="span-filter">Filtro por modalidade: </span>
+          <Select
+            dataTestid="column-filter"
+            id="column"
+            name="column"
+            handleChange={
+              ({ target: { value } }) => setFilterNumeric((prevState) => (
+                { ...prevState, column: value }))
+            }
+            value={ filterNumeric.column }
+            options={ optionsColumn }
+          />
+          <Select
+            dataTestid="comparison-filter"
+            id="comparison"
+            name="comparison"
+            handleChange={
+              ({ target: { value } }) => setFilterNumeric((prevState) => (
+                { ...prevState, comparison: value }))
+            }
+            value={ filterNumeric.comparison }
+            options={ optionsComparisonFilter }
+          />
+          <label htmlFor="value-filter">
+            <input
+              className="filter-numeric"
+              data-testid="value-filter"
+              id="value-filter"
+              name="value"
+              onChange={
+                ({ target: { value } }) => setFilterNumeric((prevState) => (
+                  { ...prevState, value }))
+              }
+              size=""
+              type="number"
+              value={ filterNumeric.value }
+            />
+          </label>
+          <button
+            className="button"
+            data-testid="button-filter"
+            onClick={ (e) => {
+              e.preventDefault();
+              createNumericValueFilter(filterNumeric);
+            } }
+            type="submit"
+          >
+            Filtrar
+          </button>
+        </div>
+      </section>
 
-      <div>
+      <section className="box-individual-filter">
         {filterByNumbericValues.length !== 0
-        && filterByNumbericValues.map(({ column, comparison, value }, i) => {
-          let comparisonLabel = '>';
-          if (comparison === 'menor que') comparisonLabel = '<';
-          if (comparison === 'igual a') comparisonLabel = '===';
-          return (
-            <div key={ `${column} + ${i}` } data-testid="filter">
+        && filterByNumbericValues.map(({ column, comparison, value }, i) => (
+
+          <>
+            <div
+              className="individual-filter"
+              data-testid="name-filter"
+              key={ `${column} + ${i}` }
+            >
               <p>
                 {column}
                 {' '}
-                {comparisonLabel}
+                {comparison}
                 {' '}
                 {value}
               </p>
+            </div>
+            <div>
               <button
-                type="submit"
+                className="button-delete"
                 onClick={ (e) => {
                   e.preventDefault();
                   reCreateOptionsColumn(column);
                   removeFilter(column);
                 } }
+                type="submit"
               >
                 X
-
               </button>
             </div>
-          );
-        })}
-      </div>
-      <div>
+
+          </>
+        ))}
+      </section>
+      <div className="box-individual-filter">
         <button
-          type="submit"
+          className="button"
           data-testid="button-remove-filters"
           onClick={ (e) => {
             e.preventDefault();
             removeAllFilters();
           } }
+          type="submit"
         >
-          Remover todas filtragens
+          Limpar filtros
         </button>
       </div>
       <div>
@@ -167,35 +185,38 @@ function Filters() {
           }
         >
           <input
-            type="radio"
-            id="sort-radio"
+            className="radio-button"
             data-testid="column-sort-input-asc"
+            id="sort-radio"
             name="sortTable"
+            type="radio"
             value="ASC"
           />
-          ASC
+          <span className="span-filter">ASC</span>
           <input
-            type="radio"
+            className="radio-button"
+            data-testid="column-sort-input-desc"
             id="sort-radio"
             name="sortTable"
-            data-testid="column-sort-input-desc"
+            type="radio"
             value="DESC"
           />
-          DESC
+          <span className="span-filter">DESC</span>
         </label>
 
         <button
-          type="button"
+          className="button"
           data-testid="column-sort-button"
           onClick={ (e) => {
             e.preventDefault();
             createTableSort(order);
           } }
+          type="button"
         >
           Ordenar
         </button>
       </div>
-    </section>
+    </form>
   );
 }
 

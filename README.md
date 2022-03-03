@@ -15,7 +15,12 @@
 * Utilizar o _React Hook useContext_;
 * Utilizar o _React Hook useEffect_;
 * Utilizar o _React Hook useCallback_;
+* Utilizar o _React Hook Memo_;
 
 ## Desempenho
 
 Desempenho = 100% nos requisitos totais.
+
+## Projeto Finalizado
+
+![Projeto StarWars](./src/images/Projeto_Context_API.png)
