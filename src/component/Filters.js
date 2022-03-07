@@ -1,7 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import ButtonRemoverFiltro from './ButtonRemoverFiltro';
+import ButtonOrdenar from './ButtonOrdenar';
 import '../style/filters.css';
 import { PlanetsContext } from '../context/PlanetsContext';
 import Select from './Select';
+import ButtonFiltrar from './ButtonFiltrar';
+import ButtonLimparFiltros from './ButtonLimparFiltros';
 
 const optionsComparisonFilter = ['maior que', 'menor que', 'igual a'];
 const optionsColumnFilter = ['population',
@@ -33,12 +37,12 @@ function Filters() {
     sort: 'ASC',
   });
 
-  function reCreateOptionsColumn(column) {
+  const reCreateOptionsColumn = useCallback((column) => {
     const verifyOptions = optionsColumn.some((item) => item.includes(column));
     if (!verifyOptions) {
       setOptionsColumn((prevState) => [...prevState, column]);
     }
-  }
+  }, [optionsColumn]);
 
   useEffect(() => {
     const newOptionsColumn = optionsColumn.filter((option) => filterByNumbericValues
@@ -102,17 +106,12 @@ function Filters() {
               value={ filterNumeric.value }
             />
           </label>
-          <button
-            className="button"
-            data-testid="button-filter"
-            onClick={ (e) => {
-              e.preventDefault();
-              createNumericValueFilter(filterNumeric);
-            } }
-            type="submit"
+          <ButtonFiltrar
+            callBack={ createNumericValueFilter }
+            param={ filterNumeric }
           >
             Filtrar
-          </button>
+          </ButtonFiltrar>
         </div>
       </section>
 
@@ -135,34 +134,24 @@ function Filters() {
               </p>
             </div>
             <div>
-              <button
-                className="button-delete"
-                onClick={ (e) => {
-                  e.preventDefault();
-                  reCreateOptionsColumn(column);
-                  removeFilter(column);
-                } }
-                type="submit"
+              <ButtonRemoverFiltro
+                reCreateOptionsColumn={ reCreateOptionsColumn }
+                column={ column }
+                removeFilter={ removeFilter }
               >
                 X
-              </button>
+              </ButtonRemoverFiltro>
             </div>
 
           </>
         ))}
       </section>
       <div className="box-individual-filter">
-        <button
-          className="button"
-          data-testid="button-remove-filters"
-          onClick={ (e) => {
-            e.preventDefault();
-            removeAllFilters();
-          } }
-          type="submit"
+        <ButtonLimparFiltros
+          removeAllFilters={ removeAllFilters }
         >
-          Limpar filtros
-        </button>
+          Limpar Filtros
+        </ButtonLimparFiltros>
       </div>
       <div>
         <Select
@@ -204,17 +193,12 @@ function Filters() {
           <span className="span-filter">DESC</span>
         </label>
 
-        <button
-          className="button"
-          data-testid="column-sort-button"
-          onClick={ (e) => {
-            e.preventDefault();
-            createTableSort(order);
-          } }
-          type="button"
+        <ButtonOrdenar
+          createTableSort={ createTableSort }
+          order={ order }
         >
           Ordenar
-        </button>
+        </ButtonOrdenar>
       </div>
     </form>
   );
