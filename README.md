@@ -19,7 +19,7 @@
 
 ## Desempenho
 
-Desempenho = 100% nos requisitos totais.
+100% nos requisitos totais.
 
 ## Projeto Finalizado
 
